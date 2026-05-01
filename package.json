@@ -1,10 +1,10 @@
 {
-  "name": "@simplexd/thread-to-skill",
+  "name": "@simplexd/simple-skills",
   "version": "0.1.0",
-  "description": "Install the thread-to-skill Codex skill.",
+  "description": "Install the Simple Skills Agent Skill suite.",
   "type": "module",
   "bin": {
-    "thread-to-skill": "bin/install.js"
+    "simple-skills": "bin/install.js"
   },
   "files": [
     "bin/",
@@ -13,14 +13,20 @@
     "LICENSE"
   ],
   "scripts": {
-    "install:local": "node bin/install.js",
+    "install:local": "node bin/install.js --codex --local --force",
     "pack:dry-run": "npm pack --dry-run",
-    "test": "node bin/install.js --dest /tmp/thread-to-skill-install-test --force"
+    "test": "node --test scripts/test-installer.js"
   },
   "keywords": [
     "codex",
+    "claude",
+    "cursor",
+    "gemini",
+    "agent-skills",
     "skill",
+    "skills",
     "ai",
+    "simple-skills",
     "thread-to-skill",
     "knowledge-management"
   ],
