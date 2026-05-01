@@ -1,0 +1,43 @@
+{
+  "name": "@simplecodecx/thread-to-skill",
+  "version": "0.1.0",
+  "description": "Install the thread-to-skill Codex skill.",
+  "type": "module",
+  "bin": {
+    "thread-to-skill": "bin/install.js"
+  },
+  "files": [
+    "bin/",
+    "skills/thread-to-skill/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "install:local": "node bin/install.js",
+    "pack:dry-run": "npm pack --dry-run",
+    "test": "node bin/install.js --dest /tmp/thread-to-skill-install-test --force"
+  },
+  "keywords": [
+    "codex",
+    "skill",
+    "ai",
+    "thread-to-skill",
+    "knowledge-management"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimpleCodeCX/Simple-Skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SimpleCodeCX/Simple-Skills/issues"
+  },
+  "homepage": "https://github.com/SimpleCodeCX/Simple-Skills#readme",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

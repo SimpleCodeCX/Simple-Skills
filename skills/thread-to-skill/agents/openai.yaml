@@ -1,0 +1,4 @@
+interface:
+  display_name: "Thread to Skill"
+  short_description: "把 thread 反馈沉淀为领域知识和 skill"
+  default_prompt: "使用 thread-to-skill 复盘这个 thread，去噪并沉淀为领域知识，判断是否需要升级成 skill。"
