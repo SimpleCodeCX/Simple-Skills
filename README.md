@@ -5,7 +5,7 @@ Install the `thread-to-skill` Codex skill with `npx`.
 ## Install
 
 ```bash
-npx @simplecodecx/thread-to-skill@latest
+npx @simplexd/thread-to-skill@latest
 ```
 
 Then restart Codex so the new skill is loaded.
@@ -13,10 +13,10 @@ Then restart Codex so the new skill is loaded.
 ## Options
 
 ```bash
-npx @simplecodecx/thread-to-skill@latest --force
-npx @simplecodecx/thread-to-skill@latest --dry-run
-npx @simplecodecx/thread-to-skill@latest --codex-home ~/.codex
-npx @simplecodecx/thread-to-skill@latest --dest ~/.codex/skills/thread-to-skill
+npx @simplexd/thread-to-skill@latest --force
+npx @simplexd/thread-to-skill@latest --dry-run
+npx @simplexd/thread-to-skill@latest --codex-home ~/.codex
+npx @simplexd/thread-to-skill@latest --dest ~/.codex/skills/thread-to-skill
 ```
 
 ## Local Development
@@ -28,7 +28,7 @@ npm run pack:dry-run
 
 ## Publish
 
-Before publishing, confirm that the npm scope `@simplecodecx` is available to your npm account.
+Before publishing, confirm that the npm scope `@simplexd` is available to your npm account.
 If it is not, update the `name` field in `package.json`.
 
 ```bash
