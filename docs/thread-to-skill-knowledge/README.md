@@ -91,7 +91,7 @@
 推荐目录结构：
 
 ```text
-thread-to-skill-knowledge/
+<docsPath>/
   source-records/
     2026-04-30-single-order-tracking/
       README.md
@@ -137,28 +137,36 @@ thread-to-skill-knowledge/
       assets/
 ```
 
-生成位置：
+配置初始化与生成位置：
 
-- 默认在对应仓库根目录下创建 `thread-to-skill-knowledge/` 目录。目录名与本文标题保持关联，同时和 `thread-to-skill` 这个 skill 名区分开。
-- 知识库位置可以由用户指定。指定一次后，可以把该位置记录到 `thread-to-skill` skill 文档里，后续执行时按 skill 中记录的位置写入，不再要求用户重复指定。
-- 如果没有用户指定位置，也没有在 skill 中记录过位置，则使用默认位置 `<project-root>/thread-to-skill-knowledge/`。
-- 记录到 skill 里的路径建议使用相对路径，方便仓库迁移和开源；只有本地私有场景才使用绝对路径。
-- 指定路径表示知识库根目录，`source-records/`、`review-records/`、`domains/`、`skill-candidates/`、`skills/` 都直接放在这个目录下。
-- `thread-to-skill` 是负责复盘、去噪和沉淀的辅助 skill；`thread-to-skill-knowledge/` 是该 skill 生成和维护的知识库目录。
-- 如果是独立知识库仓库，`thread-to-skill-knowledge/` 放在该仓库根目录。
-- 如果是业务项目仓库，`thread-to-skill-knowledge/` 也放在项目根目录，不要混进业务项目的 `docs/reports/`、源码目录或测试目录。
-- 本文档可以作为方案说明放在 `docs/` 或 `docs/reports/` 中，但后续生成的沉淀材料应进入仓库根目录下的 `thread-to-skill-knowledge/`。
+- 每次使用 `thread-to-skill` 写入知识库前，先检查项目根目录是否存在 `thread-to-skill-knowledge.config.json`。
+- 如果配置文件不存在，自动创建，默认内容为：
+
+```json
+{
+  "docsPath": "docs/thread-to-skill-knowledge"
+}
+```
+
+- `docsPath` 表示知识库文档根目录。`source-records/`、`review-records/`、`domains/`、`skill-candidates/`、`skills/` 都直接放在 `<project-root>/<docsPath>/` 下。
+- 如果配置文件已经存在，只读取，不覆盖、不重写，避免丢失未来新增配置。
+- 如果配置文件存在但 JSON 不合法，或缺少 `docsPath`，不要自动修复或覆盖；先说明问题，让用户决策。
+- 如果用户本轮明确指定新位置，优先使用用户指定位置；如果要持久化该位置，再更新 `thread-to-skill-knowledge.config.json` 的 `docsPath`。
+- 记录路径时优先使用相对路径；只有本地私有场景才使用绝对路径。
+- `thread-to-skill` 是负责复盘、去噪和沉淀的辅助 skill；`<docsPath>/` 是该 skill 生成和维护的知识库文档根目录。
 
 仓库根目录结构：
 
 ```text
 <project-root>/
-  thread-to-skill-knowledge/
-    source-records/
-    review-records/
-    domains/
-    skill-candidates/
-    skills/
+  thread-to-skill-knowledge.config.json
+  docs/
+    thread-to-skill-knowledge/
+      source-records/
+      review-records/
+      domains/
+      skill-candidates/
+      skills/
 ```
 
 开源时建议采用“双仓库”策略：
@@ -579,21 +587,21 @@ npx @simplexd/simple-skills@latest --list
 处理已保存 thread 文档：
 
 ```text
-请使用 thread-to-skill 处理 source-records/<source-id>/evidence-summary.md，
-生成复盘记录到 `review-records/`，并判断应该合并到哪些 domains。
+请使用 thread-to-skill 处理 <docsPath>/source-records/<source-id>/evidence-summary.md，
+生成复盘记录到 `<docsPath>/review-records/`，并判断应该合并到 `<docsPath>/domains/` 下的哪些领域目录。
 ```
 
 直接沉淀到知识库：
 
 ```text
-请使用 thread-to-skill，把当前 thread 沉淀到仓库根目录下的 thread-to-skill-knowledge 知识库里。
-目录结构按本文件的规范来。
+请使用 thread-to-skill，把当前 thread 沉淀到 thread-to-skill-knowledge.config.json 中 docsPath 指向的知识库里。
+如果配置文件不存在，先创建默认配置；目录结构按本文件的规范来。
 ```
 
 从领域目录生成候选 skill：
 
 ```text
-请使用 thread-to-skill，基于 domains/<domain>/README.md 和相关子主题文档，
+请使用 thread-to-skill，基于 <docsPath>/domains/<domain>/README.md 和相关子主题文档，
 生成一个 <skill-name> 的候选 skill。
 ```
 
@@ -603,31 +611,33 @@ npx @simplexd/simple-skills@latest --list
 
 每次重要 thread 收尾时，可以让 AI 工具执行以下流程：
 
-1. 保存脱敏来源记录到 `source-records/`。
-2. 由 AI 自动生成 thread 初标结果，放到 `review-records/`。
-3. AI 按高置信度、待确认、冲突项和高影响项分层。
-4. 人工只确认待确认、冲突和高影响内容。
-5. 将高置信度且无冲突的稳定规则合并到领域目录或子主题文档。
-6. 合并领域目录时，只保留最终态规则，不保留中间讨论过程。
-7. 判断是否已经成熟到进入候选 skill 或正式 AI 能力包。
+1. 检查或创建 `thread-to-skill-knowledge.config.json`，读取 `docsPath`。
+2. 保存脱敏来源记录到 `<docsPath>/source-records/`。
+3. 由 AI 自动生成 thread 初标结果，放到 `<docsPath>/review-records/`。
+4. AI 按高置信度、待确认、冲突项和高影响项分层。
+5. 人工只确认待确认、冲突和高影响内容。
+6. 将高置信度且无冲突的稳定规则合并到 `<docsPath>/domains/` 的领域目录或子主题文档。
+7. 合并领域目录时，只保留最终态规则，不保留中间讨论过程。
+8. 判断是否已经成熟到进入候选 skill 或正式 AI 能力包。
 
 可以直接使用这个提示词：
 
 ```text
 请复盘这个 thread：
-1. 去掉过程噪音
-2. 提取我明确表达过的偏好、规则、反例和方法论
-3. 按高置信度、待确认、冲突项和高影响项分层
-4. 按领域归类
-5. 判断哪些应该进入已有领域目录或子主题文档
-6. 判断哪些已经成熟到可以升级成 skill
-7. 输出最终态内容，不要保留讨论过程
+1. 检查或创建 thread-to-skill-knowledge.config.json，按 docsPath 写入
+2. 去掉过程噪音
+3. 提取我明确表达过的偏好、规则、反例和方法论
+4. 按高置信度、待确认、冲突项和高影响项分层
+5. 按领域归类
+6. 判断哪些应该进入已有领域目录或子主题文档
+7. 判断哪些已经成熟到可以升级成 skill
+8. 输出最终态内容，不要保留讨论过程
 ```
 
 合并领域目录时可以使用：
 
 ```text
-把这次复盘结果合并到 thread-to-skill-knowledge/domains/<domain>/README.md 或对应子主题文档。
+把这次复盘结果合并到 <docsPath>/domains/<domain>/README.md 或对应子主题文档。
 如果已有规则冲突，先列出来让我确认。
 文档只保留最终态规则，不要写过程方案。
 ```
@@ -635,7 +645,7 @@ npx @simplexd/simple-skills@latest --list
 生成 AI 能力包时可以使用：
 
 ```text
-基于 thread-to-skill-knowledge/domains/<domain>/README.md 和相关子主题文档，生成一个 <skill-name> AI 能力包。
+基于 <docsPath>/domains/<domain>/README.md 和相关子主题文档，生成一个 <skill-name> AI 能力包。
 要求：
 1. skill 内容简洁、可执行
 2. 包含触发场景、核心原则、工作流程、检查清单和验证方式
