@@ -518,6 +518,46 @@ domains/
 
 `thread-to-skill` 是用于维护这套知识库的辅助 skill。它负责把一次或多次 thread 中的有效对齐内容去噪、分类、沉淀到领域目录，并判断是否适合升级成候选 skill 或正式 AI 能力包。
 
+### 10.1 安装与更新
+
+`thread-to-skill` 已通过 `@simplexd/simple-skills` 发布到 npm。`simple-skills` 是一个 AI skill 合集安装器，默认会安装包内 `skills/` 目录下的所有 skill；随着仓库后续加入更多能力，同一个安装命令会一起分发这些 skill。
+
+交互式安装：
+
+```bash
+npx @simplexd/simple-skills@latest
+```
+
+安装器会提示选择 AI runtime 和安装位置。当前支持 Codex、Claude Code、Cursor、GitHub Copilot、generic agents、Gemini CLI 和 Qwen Code。
+
+Codex 全局安装：
+
+```bash
+npx @simplexd/simple-skills@latest --codex --global
+```
+
+只安装 `thread-to-skill`：
+
+```bash
+npx @simplexd/simple-skills@latest --codex --global --skill thread-to-skill
+```
+
+更新已安装的 `thread-to-skill`：
+
+```bash
+npx @simplexd/simple-skills@latest --codex --global --skill thread-to-skill --force
+```
+
+查看当前包内包含哪些 skill：
+
+```bash
+npx @simplexd/simple-skills@latest --list
+```
+
+安装或更新后，重启对应 AI 工具，让新 skill 生效。
+
+这个安装方式适合个人和团队共享：团队可以把真实协作中反复验证过的规则沉淀到本仓库的 `skills/` 目录，再通过同一个 npm 包分发给不同 AI 工具，避免每个新 thread 都重新解释偏好、流程和反例。
+
 常用触发方式：
 
 ```text
